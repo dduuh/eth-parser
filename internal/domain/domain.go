@@ -1,5 +1,7 @@
 package domain
 
+import "math/big"
+
 type Addresses struct {
 	Id         int    `json:"-" db:"id"`
 	Address    string `json:"address" db:"address"`
@@ -7,7 +9,7 @@ type Addresses struct {
 }
 
 type Transaction struct {
-	From   string  `json:"from"`
-	To     string  `json:"to"`
-	Amount float64 `json:"amount"`
+	From   string   `json:"from"`
+	To     string   `json:"to"`
+	Amount *big.Int `json:"amount"`
 }

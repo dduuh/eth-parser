@@ -34,3 +34,15 @@ func (a *Addresses) AddAddress(ctx context.Context, addr domain.Addresses) (doma
 
 	return createdAddr, nil
 }
+
+func (a *Addresses) GetAddresses(ctx context.Context) ([]domain.Addresses, error) {
+	var addresses []domain.Addresses
+
+	query := `SELECT id, address, private_key FROM addresses`
+	err := a.db.SelectContext(ctx, &addresses, query)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get all addresses: %w", err)
+	}
+
+	return addresses, nil
+}

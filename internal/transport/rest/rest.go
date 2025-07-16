@@ -54,9 +54,7 @@ func (s *Server) Run(ctx context.Context, cfg *config.Config, handler http.Handl
 func (s *Server) InitRoutes() *mux.Router {
 	r := mux.NewRouter()
 
-	api := r.PathPrefix("/api/v1").Subrouter()
-
-	api.HandleFunc("/addresses", s.addAddress).Methods("POST")
+	r.HandleFunc("/addresses", s.addAddress).Methods("POST")
 
 	return r
 }

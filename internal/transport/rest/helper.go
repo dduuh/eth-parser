@@ -26,7 +26,7 @@ func response(w http.ResponseWriter, statusCode int, msg any) {
 	}
 }
 
-func generateETHAddress() (string, string) {
+func generateAddresses() (string, string) {
 	privateKey, err := crypto.GenerateKey()
 	if err != nil {
 		return "", ""

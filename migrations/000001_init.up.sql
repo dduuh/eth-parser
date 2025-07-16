@@ -4,10 +4,3 @@ CREATE TABLE addresses (
     balance FLOAT NOT NULL,
     private_key VARCHAR(255) NOT NULL,
 );
-
-CREATE TABLE transactions (
-    id SERIAL PRIMARY KEY NOT NULL,
-    from VARCHAR(255) NOT NULL,
-    to VARCHAR(255) NOT NULL,
-    amount FLOAT NOT NULL,
-);
