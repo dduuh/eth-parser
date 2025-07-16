@@ -21,9 +21,9 @@ func NewAddresses(db *sqlx.DB) *Addresses {
 func (a *Addresses) AddAddress(ctx context.Context, addr domain.Addresses) (domain.Addresses, error) {
 	var createdAddr domain.Addresses
 	
-	query := `INSERT INTO addresses (id, address, private_key) VALUES ($1, $2, $3)`
+	query := `INSERT INTO addresses (address, private_key) VALUES ($1, $2) RETURNING id, address, private_key`
 
-	row := a.db.QueryRowContext(ctx, query, addr.Id, addr.Address, addr.PrivateKey)
+	row := a.db.QueryRowContext(ctx, query, addr.Address, addr.PrivateKey)
 	err := row.Scan(
 		&createdAddr.Id,
 		&createdAddr.Address,

@@ -13,6 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/sirupsen/logrus"
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -24,10 +25,6 @@ func main() {
 	postgres, err := psql.New(cfg)
 	if err != nil {
 		logrus.Panicf("PostgreSQL error: %v\n", err)
-	}
-
-	if err := postgres.Up(); err != nil {
-		logrus.Panicf("Migrate error: %v\n", err)
 	}
 
 	tx := script.New()
