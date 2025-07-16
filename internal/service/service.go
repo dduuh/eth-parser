@@ -19,6 +19,7 @@ type Service struct {
 func New(addrRepo *repository.Addresses) *Service {
 	return &Service{
 		addrRepo: addrRepo,
+		addrs: addrRepo,
 	}
 }
 
