@@ -39,8 +39,7 @@ func (a *Addresses) GetAddresses(ctx context.Context) ([]domain.Addresses, error
 	var addresses []domain.Addresses
 
 	query := `SELECT id, address, private_key FROM addresses`
-	err := a.db.SelectContext(ctx, &addresses, query)
-	if err != nil {
+	if err := a.db.SelectContext(ctx, &addresses, query); err != nil {
 		return nil, fmt.Errorf("failed to get all addresses: %w", err)
 	}
 

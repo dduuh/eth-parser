@@ -26,28 +26,6 @@ func New(cfg *config.Config) (*PostgresDB, error) {
 	}, nil
 }
 
-// func (p *PostgresDB) Up() error {
-// 	driver, err := postgres.WithInstance(p.db.DB, &postgres.Config{})
-// 	if err != nil {
-// 		return fmt.Errorf("failed to get driver: %w", err)
-// 	}
-
-// 	m, err := migrate.NewWithDatabaseInstance("file://D:/Oracle/LETSGOOOOOO/eth-parser/migrations", "postgres", driver)
-// 	if err != nil {
-// 		return fmt.Errorf("failed to get migrate instance: %w", err)
-// 	}
-
-// 	if err := m.Up(); err != nil {
-// 		if errors.Is(err, migrate.ErrNoChange) {
-// 			logrus.Info("no migrations to apply")
-// 		} else {
-// 			return fmt.Errorf("failed to Up() migrations: %w", err)
-// 		}
-// 	}
-
-// 	return nil
-// }
-
 func (p *PostgresDB) Close() error {
 	if err := p.db.Close(); err != nil {
 		return fmt.Errorf("failed to close the db: %w", err)

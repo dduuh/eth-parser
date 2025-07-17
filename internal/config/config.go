@@ -10,7 +10,7 @@ type (
 	Config struct {
 		PostgresSQL PostgreSQLCfg
 		HTTP        HTTPCfg
-		Infura      InfuraCfg
+		ETH      ETHCfg
 		Telegram    TelegramCfg
 	}
 
@@ -27,8 +27,8 @@ type (
 		SSLMode  string `envconfig:"POSTGRES_SSLMODE"  default:"disable"`
 	}
 
-	InfuraCfg struct {
-		ProjectId string `envconfig:"INFURA_PROJECT_ID" default:"453b7064483c4b1f9b0575d44882c699"`
+	ETHCfg struct {
+		NodeUrl string `envconfig:"NODE_URL" default:"ws://localhost:8545"`
 	}
 
 	TelegramCfg struct {

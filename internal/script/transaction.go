@@ -28,28 +28,26 @@ func (t *Transaction) MonitorBlocks(cfg *config.Config, client *ethclient.Client
 	headers := make(chan *types.Header)
 	subscribe, err := client.SubscribeNewHead(context.Background(), headers)
 	if err != nil {
-		logrus.Panicf("SubscribeNewHead() error: %v\n", err)
+		logrus.Errorf("SubscribeNewHead() error: %v\n", err)
+		return
 	}
 
 	for {
 		select {
 		case err := <-subscribe.Err():
-			logrus.Panicf("<-subscribe.Err() error: %v\n", err)
-		case header := <-headers:
-			block, err := client.BlockByHash(context.Background(), header.Hash())
+			logrus.Errorf("<-subscribe.Err() error: %v\n", err)
+			return
+		case _ = <-headers:
+			block, err := client.BlockByNumber(context.Background(), nil)
 			if err != nil {
-				logrus.Panicf("Couldn't get full block: %v\n", err)
+				continue
 			}
 
 			for _, tx := range block.Transactions() {
-				msg, err := extractMessageFromTx(tx)
-				if err != nil {
-					logrus.Panicf("Message from tx error: %v\n", err)
-				}
-
 				for _, address := range addresses {
 					if tx.To() != nil && *tx.To() == address {
-						telegramMessage := fmt.Sprintf("Отследили адрес транзакций: %s от %s\n", address.Hex(), msg)
+						logrus.Infof("Отследили адрес транзакций: %s\n", address.Hex())
+						telegramMessage := fmt.Sprintf("Отследили адрес транзакций: %s\n", address.Hex())
 
 						err := sendTelegramMessage(
 							cfg.Telegram.Token,
@@ -57,6 +55,7 @@ func (t *Transaction) MonitorBlocks(cfg *config.Config, client *ethclient.Client
 							telegramMessage)
 						if err != nil {
 							logrus.Panicf("Telegram error: %v\n", err)
+							continue
 						}
 					}
 				}
@@ -71,7 +70,7 @@ func sendTelegramMessage(token string, chatId int64, msg string) error {
 
 	body, err := json.Marshal(map[string]any{
 		"chat_id": chatId,
-		"data":    msg,
+		"text":    msg,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to marshal the data: %w", err)
@@ -92,7 +91,13 @@ func sendTelegramMessage(token string, chatId int64, msg string) error {
 }
 
 func extractMessageFromTx(tx *types.Transaction) (common.Address, error) {
-	signer := types.NewEIP155Signer(tx.ChainId())
+	var signer types.Signer
+	
+	switch tx.Type() {
+	case types.LegacyTxType:
+		signer = types.NewEIP155Signer(tx.ChainId())
+	}
+
 	sender, err := signer.Sender(tx)
 	if err != nil {
 		return common.Address{}, fmt.Errorf("failed to get the sender: %w", err)

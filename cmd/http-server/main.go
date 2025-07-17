@@ -8,12 +8,11 @@ import (
 	"eth-parser/internal/script"
 	"eth-parser/internal/service"
 	"eth-parser/internal/transport/rest"
-	"fmt"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/sirupsen/logrus"
 	_ "github.com/lib/pq"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -48,10 +47,12 @@ func main() {
 		parsedAddresses = append(parsedAddresses, common.HexToAddress(address.Address))
 	}
 
-	client, err := ethclient.Dial(fmt.Sprintf("wss://mainnet.infura.io/ws/v3/%s", cfg.Infura.ProjectId))
+	client, err := ethclient.Dial(cfg.ETH.NodeUrl)
 	if err != nil {
 		logrus.Panicf("ETH client error: %v\n", err)
 	}
 
 	go tx.MonitorBlocks(cfg, client, parsedAddresses)
+
+	select {}
 }
