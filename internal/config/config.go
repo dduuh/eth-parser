@@ -28,7 +28,7 @@ type (
 	}
 
 	ETHCfg struct {
-		NodeUrl string `envconfig:"NODE_URL" default:"ws://localhost:8545"`
+		NodeUrl string `envconfig:"INFURA_PROJECT_ID" default:"wss://mainnet.infura.io/ws/v3/666904d95aad496a853ad440c0823bf2"`
 	}
 
 	TelegramCfg struct {
